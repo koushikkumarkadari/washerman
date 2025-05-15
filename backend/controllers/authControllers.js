@@ -8,7 +8,7 @@ import sendOtpEmail from '../utils/sendOtpEmail.js';
 
 export const signup = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const {firstName,lastName,middleName,email, phone,password, role } = req.body;
 
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'User already exists' });
@@ -17,12 +17,16 @@ export const signup = async (req, res) => {
     const isApproved = role === 'washerman' ? false : true;
 
     const user = new User({
+      firstName,
+      middleName,
+      lastName,
+      phone,
       email,
       password: hashed,
       role,
       isApproved,
-      isAdmin: false,
-      isVerified: false
+      isAdmin:false,
+      isVerified:true
     });
  
     await user.save();

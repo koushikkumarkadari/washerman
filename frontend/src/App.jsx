@@ -11,6 +11,7 @@ import UserManagement from './pages/UserManagement';
 import MyOrder from './pages/MyOrder';
 import AllOrderAdmin from './pages/AllOrderAdmin';
 import AllOrderWasherman from './pages/AllOrderWasherman';
+import Profile from './pages/Profile';
 import { useAuth } from './context/AuthContext'; // Add this import
 
 function App() {
@@ -34,10 +35,19 @@ function App() {
           }
         />
         <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/washing-orders"
           element={
             <ProtectedRoute>
-              {(role === 'washerman') ? <AllOrderWasherman /> : <Navigate to="/" />}
+              {(role === 'washerman' && user.isApproved) ? <AllOrderWasherman /> : <Navigate to="/" />}
             </ProtectedRoute>
           }
         />

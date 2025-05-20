@@ -10,7 +10,7 @@ const Navbar = ({ role, user }) => {
     ],
     washerman: [
       { name: 'Dashboard', href: '/dashboard' },
-      { name: 'My Orders', href: '/my-orders' },
+      { name: 'My Orders', href: '/washing-orders' },
       { name: 'Profile', href: '/profile' },
     ],
     admin: [

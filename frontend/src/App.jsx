@@ -10,6 +10,7 @@ import OrderForm from './pages/OrderForm';
 import UserManagement from './pages/UserManagement';
 import MyOrder from './pages/MyOrder';
 import AllOrderAdmin from './pages/AllOrderAdmin';
+import AllOrderWasherman from './pages/AllOrderWasherman';
 import { useAuth } from './context/AuthContext'; // Add this import
 
 function App() {
@@ -29,6 +30,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/washing-orders"
+          element={
+            <ProtectedRoute>
+              {(role === 'washerman') ? <AllOrderWasherman /> : <Navigate to="/" />}
             </ProtectedRoute>
           }
         />

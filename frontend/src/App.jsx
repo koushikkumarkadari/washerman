@@ -7,14 +7,17 @@ import ProtectedRoute from './components/protectedRoute';
 import Navbar from './components/Navbar';
 import OrderHere from './pages/OrderHere';
 import OrderForm from './pages/OrderForm';
+import UserManagement from './pages/UserManagement';
+import MyOrder from './pages/MyOrder';
+import AllOrderAdmin from './pages/AllOrderAdmin';
 import { useAuth } from './context/AuthContext'; // Add this import
 
 function App() {
-  const { role } = useAuth(); // Get role from context
+  const { role,user } = useAuth(); // Get role from context
 
   return (
     <>
-      <Navbar role={role} />
+      <Navbar user={user} role={role} />
       <Routes>
         {/* Public Routes */}
         <Route path="/signup" element={<Signup />} />
@@ -29,9 +32,25 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/all-orders"
+          element={
+            <ProtectedRoute>
+              {(role === 'user' && user.isAdmin) ? <AllOrderAdmin /> : <Navigate to="/" />}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-management"
+          element={
+            <ProtectedRoute>
+              {(role === 'user' && user.isAdmin) ? <UserManagement /> : <Navigate to="/" />}
+            </ProtectedRoute>
+          }
+        />
         <Route path="/order" element={<ProtectedRoute><OrderHere /></ProtectedRoute>} />
         <Route path="/order/:id" element={<ProtectedRoute><OrderForm /></ProtectedRoute>} />
-
+        <Route path="/my-orders" element={<ProtectedRoute><MyOrder /></ProtectedRoute>} />
         {/* Fallback */}
         <Route
           path="*"

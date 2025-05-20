@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import router from './routes/authRoutes.js';
 import userrouter from './routes/userRoutes.js';
+import adminrouter from './routes/adminRoutes.js';
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', router);
 app.use('/api/washermen', userrouter);
-
+app.use('/api/orders', userrouter);
+app.use('/api/admin', adminrouter);
 // DB & Server
 const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI, {

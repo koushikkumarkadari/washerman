@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Navbar = ({ role }) => {
+const Navbar = ({ role, user }) => {
   const links = {
     user: [
       { name: 'Dashboard', href: '/dashboard' },
@@ -15,17 +15,25 @@ const Navbar = ({ role }) => {
     ],
     admin: [
       { name: 'Dashboard', href: '/dashboard' },
-      { name: 'Washerman Management', href: '/washerman-management' },
+      { name: 'Washerman Management', href: '/order' },
       { name: 'User Management', href: '/user-management' },
       { name: 'All Orders', href: '/all-orders' },
     ],
   };
 
+  // Logic: If role is "user" and user.isAdmin is true, show admin links
+  let navLinks;
+  if (role === 'user' && user?.isAdmin) {
+    navLinks = links.admin;
+  } else {
+    navLinks = links[role] || [];
+  }
+
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <h1 className="text-xl font-bold text-blue-600">🧼 Washerman</h1>
       <ul className="flex space-x-6">
-        {links[role]?.map((link) => (
+        {navLinks.map((link) => (
           <li key={link.name}>
             <a
               href={link.href}

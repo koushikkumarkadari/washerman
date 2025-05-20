@@ -4,7 +4,7 @@ import User from '../models/User.js'; // Adjust path if needed
 // GET /api/washermen - fetch all washermen
 export const allWasherman=async (req, res) => {
   try {
-    const washermen = await User.find({ role: 'washerman' });
+    const washermen = await User.find({ role: 'washerman',isApproved:true });
     res.json(washermen);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch washermen' });
@@ -35,6 +35,17 @@ export const createOrder = async (req, res) => {
     res.status(201).json({ message: 'Order placed successfully', order });
   } catch (err) {
     res.status(500).json({ message: 'Failed to place order' });
+  }
+};
+// GET /api/orders/my - get all orders for the logged-in user
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id })
+      .populate('washerman', 'firstName lastName email')
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch orders' });
   }
 };
 

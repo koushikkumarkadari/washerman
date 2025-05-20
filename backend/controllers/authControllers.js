@@ -2,8 +2,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
-import client from '../utils/redisClient.js';
-import redis from '../utils/redisClient.js'; // If you're using Redis
+import client from '../utils/redisClient.js'; // If you're using Redis
 import sendOtpEmail from '../utils/sendOtpEmail.js';
 
 export const signup = async (req, res) => {

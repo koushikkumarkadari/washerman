@@ -1,12 +1,12 @@
-// backend/routes/authRoutes.js
+// backend/routes/router.js
 import express from 'express';
 import { signup, login ,sendOtp,verifyOtp} from '../controllers/authControllers.js';
 
-const authRoutes = express.Router();
+const router = express.Router();
 
-authRoutes.post('/signup', signup);
-authRoutes.post('/login', login);
-authRoutes.post('/send-otp', sendOtp);
-authRoutes.post('/verify-otp', verifyOtp);
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/send-otp', sendOtp);
+router.post('/verify-otp', verifyOtp);
 
-export default authRoutes;
+export default router;

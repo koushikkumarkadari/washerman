@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   }
-
+  
 });
 
 export default mongoose.model('User', userSchema);

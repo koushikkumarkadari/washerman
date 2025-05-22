@@ -15,9 +15,23 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend Vite port
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'https://washerman-gpo2r8v14-koushikkadari-s-projects.vercel.app',
+      'https://washerman.vercel.app',
+      'https://washerman-koushikkadari-s-projects.vercel.app'
+
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
+
 app.use(express.json());
 
 // Routes

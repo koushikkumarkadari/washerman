@@ -2,12 +2,14 @@
 import { useState} from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ForgotPasswordModal from './ForgotPasswordModal'; // Adjust the import based on your file structure
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showForgot, setShowForgot] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +54,15 @@ const Login = () => {
     Sign up here
   </Link>
 </p>
-
+<p className="text-center text-sm mt-2">
+  <span
+    className="text-blue-600 hover:underline cursor-pointer"
+    onClick={() => setShowForgot(true)}
+  >
+    Forgot Password?
+  </span>
+</p>
+{showForgot && <ForgotPasswordModal onClose={() => setShowForgot(false)} />}
     </div>
   );
 };

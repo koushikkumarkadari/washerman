@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -14,6 +14,26 @@ const OrderForm = () => {
   const [selectedItem, setSelectedItem] = useState('');
   const [quantity, setQuantity] = useState('');
   const [ironing, setIroning] = useState(false);
+  const [pricing, setPricing] = useState({});
+
+  // Fetch pricing for this washerman
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(
+          `http://localhost:5000/api/washermen/${id}/pricing`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setPricing(res.data.pricing || {});
+      } catch (err) {
+        alert('Failed to fetch pricing');
+      }
+    };
+    fetchPricing();
+  }, [id]);
 
   const handleAddItem = () => {
     if (!selectedItem || quantity <= 0) return;
@@ -35,11 +55,16 @@ const OrderForm = () => {
     setIroning(false);
   };
 
+  // Use washerman's pricing if available, else fallback to default
+  const getItemPrice = (item, ironing) => {
+    const washPrice = pricing[item]?.washing ?? 10;
+    const ironPrice = pricing[item]?.ironing ?? 5;
+    return ironing ? washPrice + ironPrice : washPrice;
+  };
+
   const calculateTotal = () => {
     return items.reduce((total, item) => {
-      const base = item.quantity * 10;
-      const iron = item.ironing ? item.quantity * 5 : 0;
-      return total + base + iron;
+      return total + item.quantity * getItemPrice(item.name, item.ironing);
     }, 0);
   };
 
@@ -51,8 +76,8 @@ const OrderForm = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post(
-        `http://localhost:5000/api/washermen/${id}/order`,
+      await axios.post(
+        `http://localhost:5000/api/user/washermen/${id}/order`,
         { items, total: calculateTotal() },
         {
           headers: {
@@ -81,7 +106,11 @@ const OrderForm = () => {
           >
             <option value="">Select Item</option>
             {CLOTH_ITEMS.map((item) => (
-              <option key={item} value={item}>{item}</option>
+              <option key={item} value={item}>
+                {item} (₹{pricing[item]?.washing ?? 10}{' '}
+                {pricing[item]?.ironing !== undefined ? `/ Iron: ₹${pricing[item]?.ironing}` : ''}
+                )
+              </option>
             ))}
           </select>
 
@@ -100,7 +129,7 @@ const OrderForm = () => {
               checked={ironing}
               onChange={() => setIroning(!ironing)}
             />
-            <span>Add Ironing (+₹5/item)</span>
+            <span>Add Ironing (+₹{pricing[selectedItem]?.ironing ?? 5}/item)</span>
           </label>
         </div>
 
@@ -124,7 +153,7 @@ const OrderForm = () => {
                     {item.quantity} × {item.name} {item.ironing && '(Ironed)'}
                   </span>
                   <span>
-                    ₹{item.quantity * 10 + (item.ironing ? item.quantity * 5 : 0)}
+                    ₹{item.quantity * getItemPrice(item.name, item.ironing)}
                   </span>
                 </li>
               ))}

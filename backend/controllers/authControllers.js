@@ -105,3 +105,57 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
 };
+
+// Send OTP for forgot password
+export const forgotPasswordSendOtp = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await sendOtpEmail(email, otp);
+    await client.set(`forgot:otp:${email}`, otp, { EX: 300 }); // 5 min TTL
+
+    res.status(200).json({ message: 'OTP sent to your email.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to send OTP' });
+  }
+};
+
+// Verify OTP for forgot password
+export const forgotPasswordVerifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+  try {
+    const storedOtp = await client.get(`forgot:otp:${email}`);
+    if (!storedOtp) return res.status(400).json({ message: 'OTP expired or not sent' });
+    if (storedOtp !== otp) return res.status(400).json({ message: 'Invalid OTP' });
+
+    await client.del(`forgot:otp:${email}`);
+    // Set a flag in Redis to allow password reset
+    await client.set(`forgot:verified:${email}`, 'true', { EX: 600 }); // 10 min TTL
+    res.status(200).json({ message: 'OTP verified. You can reset your password.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to verify OTP' });
+  }
+};
+
+// Reset password after OTP verification
+export const forgotPasswordReset = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const verified = await client.get(`forgot:verified:${email}`);
+    if (!verified) return res.status(400).json({ message: 'OTP not verified or expired' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.password = await bcrypt.hash(password, 10);
+    await user.save();
+    await client.del(`forgot:verified:${email}`);
+
+    res.status(200).json({ message: 'Password reset successful. Please login.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to reset password' });
+  }
+};

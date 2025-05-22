@@ -1,6 +1,11 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ role, user }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const links = {
     user: [
       { name: 'Dashboard', href: '/dashboard' },
@@ -11,11 +16,12 @@ const Navbar = ({ role, user }) => {
     washerman: [
       { name: 'Dashboard', href: '/dashboard' },
       { name: 'My Orders', href: '/washing-orders' },
+      { name: 'manage prices', href: '/manage-prices' },
       { name: 'Profile', href: '/profile' },
     ],
     admin: [
       { name: 'Dashboard', href: '/dashboard' },
-      { name: 'Washerman Management', href: '/order' },
+      { name: 'Washerman Management', href: '/washerman-management' },
       { name: 'User Management', href: '/user-management' },
       { name: 'All Orders', href: '/all-orders' },
     ],
@@ -29,10 +35,15 @@ const Navbar = ({ role, user }) => {
     navLinks = links[role] || [];
   }
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <h1 className="text-xl font-bold text-blue-600">🧼 Washerman</h1>
-      <ul className="flex space-x-6">
+      <ul className="flex space-x-6 items-center">
         {navLinks.map((link) => (
           <li key={link.name}>
             <a
@@ -43,6 +54,14 @@ const Navbar = ({ role, user }) => {
             </a>
           </li>
         ))}
+        {(role=="user" && user?.isAdmin)&&<li>
+          <button
+            onClick={handleLogout}
+            className="ml-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </li>}
       </ul>
     </nav>
   );

@@ -3,7 +3,7 @@ import WashermanCard from '../components/WashermanCard';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-const OrderHere = () => {
+const WashermanManagement = () => {
   const [washermen, setWashermen] = useState([]);
   const { role,user } = useAuth();
 
@@ -11,7 +11,7 @@ const OrderHere = () => {
     const fetchWashermen = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/user/washermen', {
+        const res = await axios.get('http://localhost:5000/api/admin/washerman', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -77,4 +77,4 @@ const OrderHere = () => {
   );
 };
 
-export default OrderHere;
+export default WashermanManagement;

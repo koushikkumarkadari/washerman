@@ -1,11 +1,11 @@
 import express from 'express';
-import { allWasherman, createOrder, getMyOrders } from '../controllers/userControllers.js';
+import { getApprovedWasherman, createOrder, getMyOrders } from '../controllers/userControllers.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const userrouter = express.Router();
 
-// GET /api/washermen - fetch all washermen
-userrouter.get('/', protect, allWasherman);
+// GET /api/user/washermen - fetch all washermen
+userrouter.get('/', protect, getApprovedWasherman);
 // Create order for a washerman
 userrouter.post('/:id/order', protect, createOrder);
 // Get all orders for a user

@@ -10,7 +10,6 @@ const AllOrderWasherman = () => {
   useEffect(() => {
     const fetchWashermanOrders = async () => {
       try {
-        console.log('Fetching washerman orders...');
         const token = localStorage.getItem('token');
         const res = await axios.get('http://localhost:5000/api/washermen/my-orders', {
           headers: {
@@ -30,6 +29,28 @@ const AllOrderWasherman = () => {
     }
   }, [user]);
 
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(
+        `http://localhost:5000/api/washermen/order/${orderId}/status`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (err) {
+      alert('Failed to update order status');
+    }
+  };
+
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
@@ -45,8 +66,16 @@ const AllOrderWasherman = () => {
                 <span className="font-semibold">Order ID: {order._id}</span>
                 <span className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleString()}</span>
               </div>
-              <div className="mb-2">
-                <span className="font-medium">Status:</span> {order.status}
+              <div className="mb-2 flex items-center">
+                <span className="font-medium mr-2">Status:</span>
+                <select
+                  value={order.status}
+                  onChange={e => handleStatusChange(order._id, e.target.value)}
+                  className="border rounded px-2 py-1"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
               </div>
               <div className="mb-2">
                 <span className="font-medium">User:</span> {order.user?.firstName || order.user}

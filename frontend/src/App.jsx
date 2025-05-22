@@ -12,6 +12,8 @@ import MyOrder from './pages/MyOrder';
 import AllOrderAdmin from './pages/AllOrderAdmin';
 import AllOrderWasherman from './pages/AllOrderWasherman';
 import Profile from './pages/Profile';
+import ManagePrices from './pages/ManagePrices';
+import WashermanManagement from './pages/washermanManagement';
 import { useAuth } from './context/AuthContext'; // Add this import
 
 function App() {
@@ -35,6 +37,14 @@ function App() {
           }
         />
         <Route
+          path="/washerman-management"
+          element={
+            <ProtectedRoute>
+              {(role === 'user' && user.isAdmin) ? <WashermanManagement /> : <Navigate to="/" />}
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -48,6 +58,14 @@ function App() {
           element={
             <ProtectedRoute>
               {(role === 'washerman' && user.isApproved) ? <AllOrderWasherman /> : <Navigate to="/" />}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/manage-prices"
+          element={
+            <ProtectedRoute>
+              {(role === 'washerman' && user.isApproved) ? <ManagePrices /> : <Navigate to="/" />}
             </ProtectedRoute>
           }
         />

@@ -1,6 +1,16 @@
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 
+export const allWasherman=async (req, res) => {
+  try {
+    const washermen = await User.find({ role: 'washerman'});
+    res.json(washermen);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch washermen' });
+  }
+};
+
+
 export const getApproved= async (req, res) => {
   try {
     const washerman = await User.findById(req.params.id);

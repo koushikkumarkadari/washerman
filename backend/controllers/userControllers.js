@@ -1,8 +1,8 @@
 import Order from '../models/Order.js';
 import User from '../models/User.js'; // Adjust path if needed
 
-// GET /api/washermen - fetch all washermen
-export const allWasherman=async (req, res) => {
+// GET /api/user/washermen - fetch all washermen
+export const getApprovedWasherman=async (req, res) => {
   try {
     const washermen = await User.find({ role: 'washerman',isApproved:true });
     res.json(washermen);
@@ -11,7 +11,7 @@ export const allWasherman=async (req, res) => {
   }
 };
 
-// POST /api/washermen/:id/order - create a new order
+// POST /api/user/washermen/:id/order - create a new order
 export const createOrder = async (req, res) => {
   try {
     const washermanId = req.params.id;

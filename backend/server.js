@@ -21,7 +21,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', router);
-app.use('/api/washermen', userrouter);
+app.use('/api/user/washermen', userrouter);
 app.use('/api/orders', userrouter);
 app.use('/api/admin', adminrouter);
 app.use('/api/washermen', washermanrouter);

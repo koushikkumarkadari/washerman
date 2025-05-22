@@ -3,7 +3,7 @@ import WashermanCard from '../components/WashermanCard';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-const WashermanManagement = () => {
+const ManagementWasherman = () => {
   const [washermen, setWashermen] = useState([]);
   const { role,user } = useAuth();
 
@@ -77,4 +77,4 @@ const WashermanManagement = () => {
   );
 };
 
-export default WashermanManagement;
+export default ManagementWasherman;

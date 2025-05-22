@@ -12,11 +12,9 @@ import AllOrderAdmin from './pages/AllOrderAdmin';
 import AllOrderWasherman from './pages/AllOrderWasherman';
 import Profile from './pages/Profile';
 import ManagePrices from './pages/ManagePrices';
-
-import WashermanManagement from './pages/washermanManagement';
-
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import ManagementWasherman from './pages/ManagementWasherman';
 
 function App() {
   const { role,user } = useAuth(); // Get role from context
@@ -42,7 +40,7 @@ function App() {
           path="/washerman-management"
           element={
             <ProtectedRoute>
-              {(role === 'user' && user.isAdmin) ? <WashermanManagement /> : <Navigate to="/" />}
+              {(role === 'user' && user.isAdmin) ? <ManagementWasherman /> : <Navigate to="/" />}
             </ProtectedRoute>
           }
         />

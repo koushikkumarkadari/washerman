@@ -1,5 +1,6 @@
 // src/App.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext'; // Add this import
 import Signup from './pages/Auth/Signup';
 import Login from './pages/Auth/Login';
 import Navbar from './components/Navbar';
@@ -11,8 +12,9 @@ import AllOrderAdmin from './pages/AllOrderAdmin';
 import AllOrderWasherman from './pages/AllOrderWasherman';
 import Profile from './pages/Profile';
 import ManagePrices from './pages/ManagePrices';
+
 import WashermanManagement from './pages/washermanManagement';
-import { useAuth } from './context/AuthContext'; // Add this import
+
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 

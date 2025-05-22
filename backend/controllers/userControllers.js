@@ -40,10 +40,19 @@ export const createOrder = async (req, res) => {
 // GET /api/orders/my - get all orders for the logged-in user
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id })
-      .populate('washerman', 'firstName lastName email')
-      .sort({ createdAt: -1 });
-    res.json(orders);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const [orders, total] = await Promise.all([
+      Order.find({ user: req.user._id })
+        .populate('washerman', 'firstName lastName email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Order.countDocuments({ user: req.user._id })
+    ]);
+    res.json({ orders, total });
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch orders' });
   }

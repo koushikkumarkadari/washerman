@@ -127,7 +127,7 @@ export const forgotPasswordSendOtp = async (req, res) => {
 export const forgotPasswordVerifyOtp = async (req, res) => {
   const { email, otp } = req.body;
   try {
-    const storedOtp = await client.get(`forgot:otp:${email}`);
+    const storedOtp  = await client.get(`forgot:otp:${email}`);
     if (!storedOtp) return res.status(400).json({ message: 'OTP expired or not sent' });
     if (storedOtp !== otp) return res.status(400).json({ message: 'Invalid OTP' });
 

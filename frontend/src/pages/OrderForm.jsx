@@ -76,7 +76,8 @@ const OrderForm = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      await axios.post(
+      // 1. Place order first
+      const orderRes = await axios.post(
         `http://localhost:5000/api/user/washermen/${id}/order`,
         { items, total: calculateTotal() },
         {
@@ -85,10 +86,59 @@ const OrderForm = () => {
           },
         }
       );
-      alert('Order placed successfully!');
-      navigate('/my-orders');
+      const orderId = orderRes.data.order._id;
+
+      // 2. Create Razorpay order
+      const paymentRes = await axios.post(
+        'http://localhost:5000/api/payments/create-order',
+        { orderId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { razorpayOrderId, amount, key } = paymentRes.data;
+
+      // 3. Open Razorpay checkout
+      const options = {
+        key,
+        amount: amount * 100,
+        currency: 'INR',
+        name: 'Washerman Service',
+        description: 'Order Payment',
+        order_id: razorpayOrderId,
+        handler: async function (response) {
+          // 4. Verify payment
+          await axios.post(
+            'http://localhost:5000/api/payments/verify',
+            {
+              razorpayOrderId,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              orderId,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          alert('Payment successful!');
+          navigate('/my-orders');
+        },
+        prefill: {
+          email: '', // Optionally fill user email
+        },
+        theme: {
+          color: '#3399cc',
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to place order');
+      alert(err.response?.data?.message || 'Failed to place order or payment');
     }
   };
 

@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import router from './routes/authRoutes.js';
 import userrouter from './routes/userRoutes.js';
+import paymentrouter from './routes/paymentRoutes.js';
 import adminrouter from './routes/adminRoutes.js';
 import washermanrouter from './routes/washermanRoutes.js';
 
@@ -20,11 +21,13 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
+app.use('/api/payment', paymentrouter);
 app.use('/api/auth', router);
 app.use('/api/user/washermen', userrouter);
 app.use('/api/orders', userrouter);
 app.use('/api/admin', adminrouter);
 app.use('/api/washermen', washermanrouter);
+
 // DB & Server
 const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI, {

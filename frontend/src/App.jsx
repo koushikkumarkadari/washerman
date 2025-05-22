@@ -2,7 +2,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './pages/Auth/Signup';
 import Login from './pages/Auth/Login';
-import Home from './pages/home';
 import ProtectedRoute from './components/protectedRoute';
 import Navbar from './components/Navbar';
 import OrderHere from './pages/OrderHere';
@@ -15,6 +14,7 @@ import Profile from './pages/Profile';
 import ManagePrices from './pages/ManagePrices';
 import WashermanManagement from './pages/washermanManagement';
 import { useAuth } from './context/AuthContext'; // Add this import
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const { role,user } = useAuth(); // Get role from context
@@ -32,7 +32,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard />
             </ProtectedRoute>
           }
         />

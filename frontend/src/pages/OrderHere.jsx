@@ -11,7 +11,7 @@ const OrderHere = () => {
     const fetchWashermen = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/user/washermen', {
+        const res = await axios.get(`${import.meta.env.VITE_URL}/api/user/washermen`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -30,7 +30,7 @@ const OrderHere = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/admin/${id}/approve`,
+        `${import.meta.env.VITE_URL}/api/admin/${id}/approve`,
         { isApproved: !currentStatus },
         {
           headers: {

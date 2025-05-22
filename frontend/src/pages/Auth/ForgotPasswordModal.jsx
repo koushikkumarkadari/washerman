@@ -13,7 +13,7 @@ const ForgotPasswordModal = ({ onClose }) => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/forgot-password/send-otp', { email });
+      await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/send-otp`, { email });
       setStep(2);
       setMsg('OTP sent to your email.');
     } catch (err) {
@@ -25,7 +25,7 @@ const ForgotPasswordModal = ({ onClose }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/forgot-password/verify-otp', { email, otp });
+      await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/verify-otp`, { email, otp });
       setStep(3);
       setMsg('OTP verified. Enter your new password.');
     } catch (err) {
@@ -41,7 +41,7 @@ const ForgotPasswordModal = ({ onClose }) => {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/auth/forgot-password/reset', { email, password });
+      await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/reset`, { email, password });
       setMsg('Password reset successful! Redirecting to login...');
       setTimeout(() => {
         onClose();

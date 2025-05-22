@@ -18,7 +18,7 @@ const ManagePrices = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `http://localhost:5000/api/washermen/${id}/pricing`,
+          `${import.meta.env.VITE_URL}/api/washermen/${id}/pricing`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -45,7 +45,7 @@ const ManagePrices = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/washermen/${id}/pricing`,
+        `${import.meta.env.VITE_URL}/api/washermen/${id}/pricing`,
         { pricing },
         {
           headers: { Authorization: `Bearer ${token}` },

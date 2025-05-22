@@ -16,7 +16,7 @@ const AllOrderWasherman = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `http://localhost:5000/api/washermen/my-orders?page=${page}&limit=${PAGE_SIZE}`,
+          `${import.meta.env.VITE_URL}/api/washermen/my-orders?page=${page}&limit=${PAGE_SIZE}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const AllOrderWasherman = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/washermen/order/${orderId}/status`,
+        `${import.meta.env.VITE_URL}/api/washermen/order/${orderId}/status`,
         { status: newStatus },
         {
           headers: {

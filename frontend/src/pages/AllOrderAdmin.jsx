@@ -16,7 +16,7 @@ const AllOrderAdmin = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `http://localhost:5000/api/admin/orders?page=${page}&limit=${PAGE_SIZE}`,
+          `${import.meta.env.VITE_URL}/api/admin/orders?page=${page}&limit=${PAGE_SIZE}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

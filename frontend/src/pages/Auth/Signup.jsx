@@ -33,7 +33,7 @@ const Signup = () => {
       return;
     }
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/send-otp', { email: formData.email });
+      const res = await axios.post(`${import.meta.env.VITE_URL}/api/auth/send-otp`, { email: formData.email });
       alert(res.data.message || 'OTP sent to your email');
       setOtpSent(true);
     } catch (err) {
@@ -47,7 +47,7 @@ const Signup = () => {
       return;
     }
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/verify-otp', { email: formData.email, otp });
+      const res = await axios.post(`${import.meta.env.VITE_URL}/api/auth/verify-otp`, { email: formData.email, otp });
       if (res.data.verified) {
         alert('OTP Verified Successfully');
         setOtpVerified(true);

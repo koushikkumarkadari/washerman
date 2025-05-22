@@ -14,7 +14,7 @@ const MyOrder = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `http://localhost:5000/api/orders/my?page=${page}&limit=${PAGE_SIZE}`,
+          `${import.meta.env.VITE_URL}/api/orders/my?page=${page}&limit=${PAGE_SIZE}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

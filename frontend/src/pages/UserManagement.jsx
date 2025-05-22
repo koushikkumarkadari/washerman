@@ -10,7 +10,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/admin/users', {
+        const res = await axios.get(`${import.meta.env.VITE_URL}/api/admin/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,7 +28,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/admin/users/${id}/approve`,
+        `${import.meta.env.VITE_URL}/api/admin/users/${id}/approve`,
         { isApproved: !currentStatus },
         {
           headers: {

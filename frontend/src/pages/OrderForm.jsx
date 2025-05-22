@@ -22,7 +22,7 @@ const OrderForm = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          `http://localhost:5000/api/washermen/${id}/pricing`,
+          `${import.meta.env.VITE_URL}/api/washermen/${id}/pricing`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -78,7 +78,7 @@ const OrderForm = () => {
       const token = localStorage.getItem('token');
       // 1. Place order first
       const orderRes = await axios.post(
-        `http://localhost:5000/api/user/washermen/${id}/order`,
+        `${import.meta.env.VITE_URL}/api/user/washermen/${id}/order`,
         { items, total: calculateTotal() },
         {
           headers: {
@@ -90,7 +90,7 @@ const OrderForm = () => {
 
       // 2. Create Razorpay order
       const paymentRes = await axios.post(
-        'http://localhost:5000/api/payments/create-order',
+        `${import.meta.env.VITE_URL}/api/payments/create-order`,
         { orderId },
         {
           headers: {
@@ -112,7 +112,7 @@ const OrderForm = () => {
         handler: async function (response) {
           // 4. Verify payment
           await axios.post(
-            'http://localhost:5000/api/payments/verify',
+            `${import.meta.env.VITE_URL}/api/payments/verify`,
             {
               razorpayOrderId,
               razorpayPaymentId: response.razorpay_payment_id,

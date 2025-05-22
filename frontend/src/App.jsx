@@ -2,7 +2,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './pages/Auth/Signup';
 import Login from './pages/Auth/Login';
-import ProtectedRoute from './components/protectedRoute';
 import Navbar from './components/Navbar';
 import OrderHere from './pages/OrderHere';
 import OrderForm from './pages/OrderForm';
@@ -15,6 +14,7 @@ import ManagePrices from './pages/ManagePrices';
 import WashermanManagement from './pages/washermanManagement';
 import { useAuth } from './context/AuthContext'; // Add this import
 import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const { role,user } = useAuth(); // Get role from context

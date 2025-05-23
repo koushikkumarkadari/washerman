@@ -20,6 +20,7 @@ app.use(cors({
       'http://localhost:5173',
       'https://washerman.vercel.app',
       'https://washerman-koushikkadari-s-projects.vercel.app'
+      ,'https://washerman-gpo2r8v14-koushikkadari-s-projects.vercel.app/my-orders'
 
     ];
     if (!origin || allowedOrigins.includes(origin)) {

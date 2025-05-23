@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 
 const CLOTH_ITEMS = [
   'Shirts', 'Pants', 'Nightpants', 'T-Shirts', 'Hoodies', 'Neckars',
@@ -16,7 +15,6 @@ const OrderForm = () => {
   const [quantity, setQuantity] = useState('');
   const [ironing, setIroning] = useState(false);
   const [pricing, setPricing] = useState({});
-  
 
   // Fetch pricing for this washerman
   useEffect(() => {
@@ -77,7 +75,6 @@ const OrderForm = () => {
       return;
     }
     try {
-      const { user } = useAuth();
       const token = localStorage.getItem('token');
       // 1. Place order first
       const orderRes = await axios.post(
@@ -132,7 +129,7 @@ const OrderForm = () => {
           navigate('/my-orders');
         },
         prefill: {
-          email: user.email,
+          email: '', // Optionally fill user email
         },
         theme: {
           color: '#3399cc',

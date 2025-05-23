@@ -2,10 +2,19 @@ import Order from '../models/Order.js';
 import User from '../models/User.js'; // Adjust path if needed
 
 // GET /api/user/washermen - fetch all washermen
-export const getApprovedWasherman=async (req, res) => {
+export const getApprovedWasherman = async (req, res) => {
   try {
-    const washermen = await User.find({ role: 'washerman',isApproved:true });
-    res.json(washermen);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const [washermen, total] = await Promise.all([
+      User.find({ role: 'washerman', isApproved: true })
+        .skip(skip)
+        .limit(limit),
+      User.countDocuments({ role: 'washerman', isApproved: true })
+    ]);
+    res.json({ washermen, total });
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch washermen' });
   }

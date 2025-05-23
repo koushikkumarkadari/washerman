@@ -3,50 +3,37 @@ import WashermanCard from '../components/WashermanCard';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
+const PAGE_SIZE = 10;
+
 const OrderHere = () => {
   const [washermen, setWashermen] = useState([]);
-  const { role,user } = useAuth();
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchWashermen = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`${import.meta.env.VITE_URL}/api/user/washermen`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setWashermen(res.data);
+        const res = await axios.get(
+          `${import.meta.env.VITE_URL}/api/user/washermen?page=${page}&limit=${PAGE_SIZE}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setWashermen(res.data.washermen|| []);
+        setTotal(res.data.total|| 0);
+        console.log(res.data);
       } catch (err) {
         console.error('Failed to fetch washermen', err);
       }
     };
 
     fetchWashermen();
-  }, []);
+  }, [page]);
 
-  // Toggle isApproved status for a washerman (admin only)
-  const handleToggleApproval = async (id, currentStatus) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.patch(
-        `${import.meta.env.VITE_URL}/api/admin/${id}/approve`,
-        { isApproved: !currentStatus },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setWashermen((prev) =>
-        prev.map((w) =>
-          w._id === id ? { ...w, isApproved: !currentStatus } : w
-        )
-      );
-    } catch (err) {
-      alert('Failed to update approval status');
-    }
-  };
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
     <div className="p-8">
@@ -55,23 +42,38 @@ const OrderHere = () => {
         {washermen.map((washerman) => (
           <div key={washerman._id} className="relative">
             <WashermanCard washerman={washerman} />
-            {role === 'user' && user.isAdmin===true && (
-              <div className="mt-2 flex items-center">
-                <label className="mr-2 font-medium">
-                  Approved:
-                </label>
-                <input
-                  type="checkbox"
-                  checked={washerman.isApproved}
-                  onChange={() =>
-                    handleToggleApproval(washerman._id, washerman.isApproved)
-                  }
-                  className="w-5 h-5"
-                />
-              </div>
-            )}
           </div>
         ))}
+      </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-8 space-x-2">
+        <button
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Prev
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i + 1}
+            className={`px-3 py-1 rounded ${
+              page === i + 1
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200'
+            }`}
+            onClick={() => setPage(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

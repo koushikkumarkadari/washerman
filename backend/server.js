@@ -18,7 +18,6 @@ app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
       'http://localhost:5173',
-      'https://washerman-gpo2r8v14-koushikkadari-s-projects.vercel.app',
       'https://washerman.vercel.app',
       'https://washerman-koushikkadari-s-projects.vercel.app'
 
@@ -35,7 +34,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-app.use('/api/payment', paymentrouter);
+app.use('/api/payments', paymentrouter);
 app.use('/api/auth', router);
 app.use('/api/user/washermen', userrouter);
 app.use('/api/orders', userrouter);

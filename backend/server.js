@@ -19,9 +19,8 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:5173',
       'https://washerman.vercel.app',
-      'https://washerman-koushikkadari-s-projects.vercel.app'
-      ,'https://washerman-gpo2r8v14-koushikkadari-s-projects.vercel.app'
-
+      'https://washerman-koushikkadari-s-projects.vercel.app',
+      'https://washerman-gpo2r8v14-koushikkadari-s-projects.vercel.app'
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);

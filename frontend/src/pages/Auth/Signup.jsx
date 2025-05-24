@@ -85,11 +85,13 @@ const Signup = () => {
         <h2 className="text-2xl font-bold text-center">Sign Up</h2>
 
         {/* Name Inputs */}
-        <div className="flex space-x-2">
-          <input type="text" name="firstName" value={formData.firstName} onChange={handleChange}
-            placeholder="First Name" className="input" required />
-          <input type="text" name="middleName" value={formData.middleName} onChange={handleChange}
-            placeholder="Middle Name" className="input" />
+        <div className="flex flex-col space-y-2">
+          <div className="flex space-x-2">
+            <input type="text" name="firstName" value={formData.firstName} onChange={handleChange}
+              placeholder="First Name" className="input" required />
+            <input type="text" name="middleName" value={formData.middleName} onChange={handleChange}
+              placeholder="Middle Name" className="input" />
+          </div>
           <input type="text" name="lastName" value={formData.lastName} onChange={handleChange}
             placeholder="Last Name" className="input" required />
         </div>

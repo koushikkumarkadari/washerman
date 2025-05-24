@@ -55,8 +55,10 @@ const ForgotPasswordModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
-        <button className="absolute top-2 right-4 text-xl" onClick={onClose}>×</button>
-        <h2 className="text-xl font-bold mb-4 text-center">Forgot Password</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold m-4 text-center">Forgot Password</h2>
+          <button className=" top-2 right-4 text-xl" onClick={onClose}>X</button>
+        </div>
         {step === 1 && (
           <form onSubmit={handleSendOtp} className="space-y-4">
             <input

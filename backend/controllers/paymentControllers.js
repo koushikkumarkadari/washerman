@@ -54,7 +54,7 @@ export const verifyPayment = async (req, res) => {
     if (!payment) return res.status(404).json({ message: 'Payment not found' });
 
     // Optionally, update order status to "paid"
-    await Order.findByIdAndUpdate(orderId, { status: 'paid' });
+    await Order.findByIdAndUpdate(orderId, { paymentStatus: 'paid' });
 
     res.json({ message: 'Payment successful', payment });
   } catch (err) {

@@ -61,6 +61,9 @@ const AllOrderAdmin = () => {
                   <span className="font-medium">Status:</span> {order.status}
                 </div>
                 <div className="mb-2">
+                  <span className="font-medium">Payment Status:</span> {order.paymentStatus}
+                </div>
+                <div className="mb-2">
                   <span className="font-medium">User:</span> {order.user?.firstName || order.user}
                 </div>
                 <div className="mb-2">

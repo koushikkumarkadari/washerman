@@ -56,6 +56,9 @@ const MyOrder = () => {
                   <span className="font-medium">Status:</span> {order.status}
                 </div>
                 <div className="mb-2">
+                  <span className="font-medium">Payment Status:</span> {order.paymentStatus}
+                </div>
+                <div className="mb-2">
                   <span className="font-medium">Washerman:</span> {order.washerman?.firstName || order.washerman}
                 </div>
                 <ul className="mb-2">

@@ -90,6 +90,9 @@ const AllOrderWasherman = () => {
                   </select>
                 </div>
                 <div className="mb-2">
+                  <span className="font-medium">payment Status:</span> {order.paymentStatus}
+                </div>
+                <div className="mb-2">
                   <span className="font-medium">User:</span> {order.user?.firstName || order.user}
                 </div>
                 <ul className="mb-2">

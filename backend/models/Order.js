@@ -12,6 +12,7 @@ const orderSchema = new mongoose.Schema({
   ],
   total: { type: Number, required: true },
   status: { type: String, default: 'pending' },
+  paymentStatus:{type:String, default:'unpaid'}, // paid, unpaid
   createdAt: { type: Date, default: Date.now }
 });
 

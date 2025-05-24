@@ -1,5 +1,5 @@
 import Order from '../models/Order.js';
-import User from '../models/User.js'; // Adjust path if needed
+import User from '../models/User.js';
 import Feedback from '../models/Feedback.js';
 
 // GET /api/user/washermen - fetch all washermen
@@ -54,13 +54,31 @@ export const getMyOrders = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Build filters
+    const query = { user: req.user._id,paymentStatus: 'paid' };
+    // Date range filter
+    if (req.query.dateFrom || req.query.dateTo) {
+      query.createdAt = {};
+      if (req.query.dateFrom) query.createdAt.$gte = new Date(req.query.dateFrom);
+      if (req.query.dateTo) query.createdAt.$lte = new Date(req.query.dateTo + 'T23:59:59.999Z');
+    }
+    // Order total filter
+    if (req.query.totalMin) query.total = { ...query.total, $gte: Number(req.query.totalMin) };
+    if (req.query.totalMax) query.total = { ...query.total, $lte: Number(req.query.totalMax) };
+
+    // Sorting
+    let sort = { createdAt: -1 };
+    if (req.query.sort === 'oldest') sort = { createdAt: 1 };
+    if (req.query.sort === 'totalLowHigh') sort = { total: 1 };
+    if (req.query.sort === 'totalHighLow') sort = { total: -1 };
+
     const [orders, total] = await Promise.all([
-      Order.find({ user: req.user._id, paymentStatus: 'paid' })
+      Order.find(query)
         .populate('washerman', 'firstName lastName email')
-        .sort({ createdAt: -1 })
+        .sort(sort)
         .skip(skip)
         .limit(limit),
-      Order.countDocuments({ user: req.user._id, paymentStatus: 'paid' })
+      Order.countDocuments(query)
     ]);
     res.json({ orders, total });
   } catch (err) {

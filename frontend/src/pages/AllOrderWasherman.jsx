@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Pagination from '../components/Pagination';
 import OrderCard from '../components/OrderCard';
+import OrderFilters from '../components/OrderFilters';
 
 const PAGE_SIZE = 10;
 
@@ -12,13 +13,19 @@ const AllOrderWasherman = () => {
   const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     const fetchWashermanOrders = async () => {
       try {
         const token = localStorage.getItem('token');
+        const params = new URLSearchParams({
+          page,
+          limit: PAGE_SIZE,
+          ...filters,
+        });
         const res = await axios.get(
-          `${import.meta.env.VITE_URL}/api/washermen/my-orders?page=${page}&limit=${PAGE_SIZE}`,
+          `${import.meta.env.VITE_URL}/api/washermen/my-orders?${params.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -38,7 +45,7 @@ const AllOrderWasherman = () => {
       setLoading(true);
       fetchWashermanOrders();
     }
-  }, [user, page]);
+  }, [user, page, filters]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
@@ -69,6 +76,7 @@ const AllOrderWasherman = () => {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Orders Assigned to You</h1>
+      <OrderFilters filters={filters} setFilters={setFilters} />
       {orders.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (

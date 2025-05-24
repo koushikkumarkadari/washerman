@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Pagination from '../components/Pagination';
 import OrderCard from '../components/OrderCard';
-
+import OrderFilters from '../components/OrderFilters';
 
 const PAGE_SIZE = 10;
 
@@ -13,13 +13,20 @@ const AllOrderAdmin = () => {
   const { role,user } = useAuth();
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
+  const [filters, setFilters] = useState({});
+  
 
   useEffect(() => {
     const fetchAllOrders = async () => {
       try {
         const token = localStorage.getItem('token');
+         const params = new URLSearchParams({
+          page,
+          limit: PAGE_SIZE,
+          ...filters,
+        });
         const res = await axios.get(
-          `${import.meta.env.VITE_URL}/api/admin/orders?page=${page}&limit=${PAGE_SIZE}`,
+          `${import.meta.env.VITE_URL}/api/admin/orders?${params.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -40,7 +47,7 @@ const AllOrderAdmin = () => {
       setLoading(true);
       fetchAllOrders();
     }
-  }, [role, page]);
+  }, [role, page,user, filters]);
 
   const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
 
@@ -49,6 +56,7 @@ const AllOrderAdmin = () => {
   return (
     <div className="p-8 max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">All Orders (Admin)</h1>
+      <OrderFilters  filters={filters} setFilters={setFilters} />
       {orders.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (

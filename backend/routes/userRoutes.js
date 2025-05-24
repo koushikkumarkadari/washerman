@@ -1,5 +1,5 @@
 import express from 'express';
-import { getApprovedWasherman, createOrder, getMyOrders } from '../controllers/userControllers.js';
+import { getApprovedWasherman, createOrder, getMyOrders, submitFeedback } from '../controllers/userControllers.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const userrouter = express.Router();
@@ -10,5 +10,7 @@ userrouter.get('/', protect, getApprovedWasherman);
 userrouter.post('/:id/order', protect, createOrder);
 // Get all orders for a user
 userrouter.get('/my', protect, getMyOrders);
+// POST /api/user/washermen/feedback - feedback from contact form
+userrouter.post('/feedback', submitFeedback);
 
 export default userrouter;

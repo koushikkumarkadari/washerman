@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Profile = () => {
   const { user, role, logout } = useAuth();
@@ -37,6 +37,12 @@ const Profile = () => {
         >
           Logout
         </button>
+        <Link
+          to="/contact"
+          className="block mt-4 text-center text-blue-600 hover:underline"
+        >
+          📞 Contact Us
+        </Link>
       </div>
     </div>
   );

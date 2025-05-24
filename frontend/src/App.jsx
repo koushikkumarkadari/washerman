@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import ManagePrices from './pages/ManagePrices';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import ContactUs from './pages/ContactUs';
 import ManagementWasherman from './pages/ManagementWasherman';
 
 function App() {
@@ -86,6 +87,8 @@ function App() {
           }
         />
         <Route path="/order" element={<ProtectedRoute><OrderHere /></ProtectedRoute>} />
+        <Route path="/contact" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
+        {/* Order Form */}
         <Route path="/order/:id" element={<ProtectedRoute><OrderForm /></ProtectedRoute>} />
         <Route path="/my-orders" element={<ProtectedRoute><MyOrder /></ProtectedRoute>} />
         {/* Fallback */}

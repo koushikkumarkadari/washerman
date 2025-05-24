@@ -10,12 +10,12 @@ export const getOrders = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [orders, total] = await Promise.all([
-      Order.find({ washerman: req.user._id })
+      Order.find({ washerman: req.user._id,paymentStatus: 'paid' })
         .populate('user', 'firstName lastName email')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-      Order.countDocuments({ washerman: req.user._id })
+      Order.countDocuments({ washerman: req.user._id ,paymentStatus: 'paid' }),
     ]);
     res.json({ orders, total });
   } catch (err) {

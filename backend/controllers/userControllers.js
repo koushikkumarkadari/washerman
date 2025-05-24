@@ -1,5 +1,6 @@
 import Order from '../models/Order.js';
 import User from '../models/User.js'; // Adjust path if needed
+import Feedback from '../models/Feedback.js';
 
 // GET /api/user/washermen - fetch all washermen
 export const getApprovedWasherman = async (req, res) => {
@@ -54,16 +55,31 @@ export const getMyOrders = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [orders, total] = await Promise.all([
-      Order.find({ user: req.user._id })
+      Order.find({ user: req.user._id, paymentStatus: 'paid' })
         .populate('washerman', 'firstName lastName email')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-      Order.countDocuments({ user: req.user._id })
+      Order.countDocuments({ user: req.user._id, paymentStatus: 'paid' })
     ]);
     res.json({ orders, total });
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch orders' });
+  }
+};
+
+// POST /api/user/washermen/feedback - save feedback from contact form
+export const submitFeedback = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    const feedback = new Feedback({ name, email, message });
+    await feedback.save();
+    res.status(201).json({ message: 'Feedback submitted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to submit feedback' });
   }
 };
 

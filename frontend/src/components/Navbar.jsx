@@ -42,7 +42,13 @@ const Navbar = ({ role, user }) => {
 
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold text-blue-600">🧼 Washerman</h1>
+      <div className="flex items-center">
+        <img
+          src="https://i.ibb.co/prQKksYh/assets-task-01jw0trjw3e8cbz9w61v81yb5e-1748079800-img-1.jpg"
+          alt="Washerman Logo"
+          className="h-10 w-10 mr-2 inline-block"/>
+     <h1 className="text-xl font-bold text-blue-600"> Washerman</h1>
+     </div>
       <ul className="flex space-x-6 items-center">
         {navLinks.map((link) => (
           <li key={link.name}>

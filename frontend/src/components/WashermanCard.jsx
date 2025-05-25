@@ -11,7 +11,7 @@ const WashermanCard = ({ washerman }) => {
   return (
     <div
       onClick={handleClick}
-      className="cursor-pointer shadow-lg rounded-xl p-4 hover:bg-gray-100 transition"
+      className="cursor-pointer bg-gray-50 shadow-lg rounded-xl p-4 hover:bg-gray-100 transition"
     >
       <img
         src={washerman.image || 'https://via.placeholder.com/150'}

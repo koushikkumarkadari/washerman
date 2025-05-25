@@ -7,12 +7,13 @@ const orderSchema = new mongoose.Schema({
     {
       name: { type: String, required: true },
       quantity: { type: Number, required: true },
-      ironing: { type: Boolean, default: false }
+      ironing: { type: Boolean, default: false },
+      price: { type: Number, required: true } // Price per item
     }
   ],
   total: { type: Number, required: true },
   status: { type: String, default: 'pending' },
-  paymentStatus:{type:String, default:'unpaid'}, // paid, unpaid
+  paymentStatus:{type:String, default:'failed'}, // failed,paid, unpaid
   createdAt: { type: Date, default: Date.now }
 });
 

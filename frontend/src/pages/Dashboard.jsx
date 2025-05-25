@@ -1,6 +1,10 @@
 import React from 'react';
+//     <AuthContext.Provider value={{ user, token, role, login, signup, logout, isAdmin, isWasherman, isUser }}>
+import { useAuth } from '../context/AuthContext';
+
 
 function Dashboard() {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 flex flex-col items-center justify-center">
       <div className="bg-white shadow-xl rounded-2xl p-10 max-w-2xl w-full flex flex-col items-center">
@@ -15,7 +19,7 @@ function Dashboard() {
         <p className="text-lg text-gray-600 mb-6 text-center">
           Fast, reliable, and affordable laundry & ironing service.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+        {(user.role==="user" && user.isAdmin===false)&&<div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
           <a
             href="/order"
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition"
@@ -28,13 +32,46 @@ function Dashboard() {
           >
             My Orders
           </a>
-        </div>
-        <div className="mt-8 text-gray-500 text-center text-sm">
+        </div>}
+        {(user.role==="washerman" && user.isAdmin===false)&&<div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <a
+            href="/manage-prices"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition"
+          >
+            Manage Prices
+          </a>
+          <a
+            href="/washing-orders"
+            className="bg-white border border-blue-600 text-blue-700 font-semibold py-3 px-8 rounded-lg shadow hover:bg-blue-50 transition"
+          >
+            My Orders
+          </a>
+        </div>}
+        {(user.role==="user" && user.isAdmin===true)&&<div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <a
+            href="/washerman-management"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition"
+          >
+            Washerman Management
+          </a>
+          <a
+            href="/user-management"
+            className="bg-white border border-blue-600 text-blue-700 font-semibold py-3 px-8 rounded-lg shadow hover:bg-blue-50 transition"
+          >
+            User Management
+          </a>
+        </div>}
+        {(user.isAdmin===false)&&<div className="mt-8 text-gray-500 text-center text-sm">
           <span>Need help? </span>
           <a href="/profile" className="text-blue-600 hover:underline">
             Visit your profile
           </a>
-        </div>
+        </div>}
+        {(user.isAdmin===true)&&<div className="mt-8 text-gray-500 text-center text-sm">
+          <a href="/all-orders" className="text-blue-600 hover:underline">
+            all orders
+          </a>
+        </div>}
       </div>
       <footer className="mt-10 text-gray-400 text-xs text-center">
         &copy; {new Date().getFullYear()} Washerman Service. All rights reserved.

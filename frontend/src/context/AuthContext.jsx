@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     const res = await axios.post('/auth/login', { email, password });
     setUser(res.data.user);
     setToken(res.data.token);
+    console.log(res.data.message);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     localStorage.setItem('token', res.data.token);
     return res.data;

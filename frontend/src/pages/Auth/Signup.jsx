@@ -19,6 +19,10 @@ const Signup = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
 
+  const [loadingOtp, setLoadingOtp] = useState(false);
+  const [loadingVerify, setLoadingVerify] = useState(false);
+  const [loadingSignup, setLoadingSignup] = useState(false);
+
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -27,17 +31,19 @@ const Signup = () => {
   };
 
   const sendOtp = async () => {
-    console.log(formData.email+' sending OTP');
     if (!formData.email) {
       alert('Please enter your email to receive OTP');
       return;
     }
+    setLoadingOtp(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_URL}/api/auth/send-otp`, { email: formData.email });
       alert(res.data.message || 'OTP sent to your email');
       setOtpSent(true);
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setLoadingOtp(false);
     }
   };
 
@@ -46,6 +52,7 @@ const Signup = () => {
       alert('Please enter the OTP');
       return;
     }
+    setLoadingVerify(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_URL}/api/auth/verify-otp`, { email: formData.email, otp });
       if (res.data.verified) {
@@ -56,6 +63,8 @@ const Signup = () => {
       }
     } catch (err) {
       alert(err.response?.data?.message || 'OTP verification failed');
+    } finally {
+      setLoadingVerify(false);
     }
   };
 
@@ -69,6 +78,7 @@ const Signup = () => {
       alert('Passwords do not match');
       return;
     }
+    setLoadingSignup(true);
     try {
       const data = await signup(formData);
       alert(data.message || 'Signup successful!');
@@ -76,6 +86,8 @@ const Signup = () => {
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || 'Signup failed');
+    } finally {
+      setLoadingSignup(false);
     }
   };
 
@@ -100,9 +112,23 @@ const Signup = () => {
         <div className="flex space-x-2">
           <input type="email" name="email" value={formData.email} onChange={handleChange}
             placeholder="Gmail Address" className="input flex-1" required />
-          <button type="button" onClick={sendOtp}
-            className="bg-yellow-500 text-white px-3 rounded hover:bg-yellow-600">
-            Send OTP
+          <button
+            type="button"
+            onClick={sendOtp}
+            className="bg-yellow-500 text-white px-3 rounded hover:bg-yellow-600 flex items-center justify-center"
+            disabled={loadingOtp}
+          >
+            {loadingOtp ? (
+              <span className="flex items-center">
+                <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Sending...
+              </span>
+            ) : (
+              'Send OTP'
+            )}
           </button>
         </div>
 
@@ -116,9 +142,23 @@ const Signup = () => {
               placeholder="Enter OTP"
               className="input flex-1"
             />
-            <button type="button" onClick={verifyOtp}
-              className="bg-green-600 text-white px-3 rounded hover:bg-green-700">
-              Verify OTP
+            <button
+              type="button"
+              onClick={verifyOtp}
+              className="bg-green-600 text-white px-3 rounded hover:bg-green-700 flex items-center justify-center"
+              disabled={loadingVerify}
+            >
+              {loadingVerify ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Verifying...
+                </span>
+              ) : (
+                'Verify OTP'
+              )}
             </button>
           </div>
         )}
@@ -135,9 +175,22 @@ const Signup = () => {
         <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange}
           placeholder="Confirm Password" className="input" required />
 
-        <button type="submit" disabled={!otpVerified}
-          className={`w-full py-2 rounded ${otpVerified ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-400 text-white cursor-not-allowed'}`}>
-          Sign Up
+        <button
+          type="submit"
+          disabled={!otpVerified || loadingSignup}
+          className={`w-full py-2 rounded ${otpVerified && !loadingSignup ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-400 text-white cursor-not-allowed'} flex items-center justify-center`}
+        >
+          {loadingSignup ? (
+            <span className="flex items-center">
+              <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Signing Up...
+            </span>
+          ) : (
+            'Sign Up'
+          )}
         </button>
 
         <p className="text-center text-sm mt-4">

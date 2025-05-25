@@ -8,28 +8,35 @@ const ForgotPasswordModal = ({ onClose }) => {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Step 1: Send OTP
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/send-otp`, { email });
       setStep(2);
       setMsg('OTP sent to your email.');
     } catch (err) {
       setMsg(err.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setLoading(false);
     }
   };
 
   // Step 2: Verify OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/verify-otp`, { email, otp });
       setStep(3);
       setMsg('OTP verified. Enter your new password.');
     } catch (err) {
       setMsg(err.response?.data?.message || 'Failed to verify OTP');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,6 +47,7 @@ const ForgotPasswordModal = ({ onClose }) => {
       setMsg('Passwords do not match');
       return;
     }
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_URL}/api/auth/forgot-password/reset`, { email, password });
       setMsg('Password reset successful! Redirecting to login...');
@@ -49,6 +57,8 @@ const ForgotPasswordModal = ({ onClose }) => {
       }, 1500);
     } catch (err) {
       setMsg(err.response?.data?.message || 'Failed to reset password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,8 +79,22 @@ const ForgotPasswordModal = ({ onClose }) => {
               onChange={e => setEmail(e.target.value)}
               required
             />
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-              Send OTP
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Sending OTP...
+                </span>
+              ) : (
+                'Send OTP'
+              )}
             </button>
           </form>
         )}
@@ -84,8 +108,22 @@ const ForgotPasswordModal = ({ onClose }) => {
               onChange={e => setOtp(e.target.value)}
               required
             />
-            <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-              Verify OTP
+            <button
+              type="submit"
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Verifying...
+                </span>
+              ) : (
+                'Verify OTP'
+              )}
             </button>
           </form>
         )}
@@ -107,8 +145,22 @@ const ForgotPasswordModal = ({ onClose }) => {
               onChange={e => setConfirm(e.target.value)}
               required
             />
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-              Reset Password
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin h-4 w-4 mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Resetting...
+                </span>
+              ) : (
+                'Reset Password'
+              )}
             </button>
           </form>
         )}

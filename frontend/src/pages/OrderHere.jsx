@@ -37,7 +37,7 @@ const OrderHere = () => {
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
       <h1 className="text-2xl font-bold mb-6">Choose a Washerman</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {washermen.map((washerman) => (

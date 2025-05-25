@@ -45,7 +45,7 @@ const OrderCard = ({ order, showStatusDropdown, onStatusChange }) => (
             {item.quantity} × {item.name} {item.ironing && '(Ironed)'}
           </span>
           <span>
-            ₹{item.quantity * 10 + (item.ironing ? item.quantity * 5 : 0)}
+            ₹{item.price * item.quantity}
           </span>
         </li>
       ))}

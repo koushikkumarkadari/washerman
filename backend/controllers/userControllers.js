@@ -55,7 +55,11 @@ export const getMyOrders = async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Build filters
-    const query = { user: req.user._id,paymentStatus: 'paid' };
+    const query = {
+      user: req.user._id,
+      paymentStatus: { $in: ['paid', 'unpaid'] },
+    };
+
     // Date range filter
     if (req.query.dateFrom || req.query.dateTo) {
       query.createdAt = {};

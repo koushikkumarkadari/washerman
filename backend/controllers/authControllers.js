@@ -7,7 +7,10 @@ import sendOtpEmail from '../utils/sendOtpEmail.js';
 
 export const signup = async (req, res) => {
   try {
-    const {firstName,lastName,middleName,email, phone,password, role } = req.body;
+    let { firstName, lastName, middleName, email, phone, password, role } = req.body;
+
+    // Convert email to lowercase
+    email = email.toLowerCase();
 
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'User already exists' });
@@ -24,10 +27,10 @@ export const signup = async (req, res) => {
       password: hashed,
       role,
       isApproved,
-      isAdmin:false,
-      isVerified:true
+      isAdmin: false,
+      isVerified: true,
     });
- 
+
     await user.save();
 
     res.status(201).json({ message: 'Signup successful', user });
@@ -36,10 +39,12 @@ export const signup = async (req, res) => {
   }
 };
 
+
 // 👉 OTP sending controller
 export const sendOtp = async (req, res) => {
   console.log(req.body);
   const { email } = req.body;
+  email = email.toLowerCase();
   console.log(email);
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -55,7 +60,7 @@ export const sendOtp = async (req, res) => {
 
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
-
+  email = email.toLowerCase();
   try {
     const storedOtp = await client.get(`otp:${email}`);
     if (!storedOtp) {
@@ -77,6 +82,7 @@ export const verifyOtp = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'User not found' });
 
@@ -109,6 +115,7 @@ export const login = async (req, res) => {
 // Send OTP for forgot password
 export const forgotPasswordSendOtp = async (req, res) => {
   const { email } = req.body;
+  email = email.toLowerCase();
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -126,6 +133,7 @@ export const forgotPasswordSendOtp = async (req, res) => {
 // Verify OTP for forgot password
 export const forgotPasswordVerifyOtp = async (req, res) => {
   const { email, otp } = req.body;
+  email = email.toLowerCase();
   try {
     const storedOtp  = await client.get(`forgot:otp:${email}`);
     if (!storedOtp) return res.status(400).json({ message: 'OTP expired or not sent' });
@@ -143,6 +151,7 @@ export const forgotPasswordVerifyOtp = async (req, res) => {
 // Reset password after OTP verification
 export const forgotPasswordReset = async (req, res) => {
   const { email, password } = req.body;
+  email = email.toLowerCase();
   try {
     const verified = await client.get(`forgot:verified:${email}`);
     if (!verified) return res.status(400).json({ message: 'OTP not verified or expired' });

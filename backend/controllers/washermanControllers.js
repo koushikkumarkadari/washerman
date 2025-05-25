@@ -10,7 +10,10 @@ export const getOrders = async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Build filters
-    const query = { washerman: req.user._id, paymentStatus: 'paid' };
+    const query = {
+      washerman: req.user._id,
+      paymentStatus: { $in: ['paid', 'unpaid'] },
+    };
     // Email filter (user email)
     if (req.query.email) {
       const user = await User.findOne({ email: { $regex: req.query.email, $options: 'i' } });

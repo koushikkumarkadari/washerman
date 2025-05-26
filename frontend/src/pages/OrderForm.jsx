@@ -237,12 +237,21 @@ const OrderForm = () => {
             ) : (
               <ul className="space-y-2">
                 {items.map((item, index) => (
-                  <li key={index} className="flex justify-between text-gray-700">
+                  <li key={index} className="flex justify-between items-center text-gray-700">
                     <span>
                       {item.quantity} × {item.name} {item.ironing && '(Ironed)'}
                     </span>
-                    <span>
+                    <span className="flex items-center gap-2">
                       ₹{item.quantity * getItemPrice(item.name, item.ironing)}
+                      <button
+                        type="button"
+                        className="ml-2 text-red-600 hover:underline text-sm"
+                        onClick={() => {
+                          setItems(items.filter((_, i) => i !== index));
+                        }}
+                      >
+                        Remove
+                      </button>
                     </span>
                   </li>
                 ))}

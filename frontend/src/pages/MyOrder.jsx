@@ -3,6 +3,7 @@ import axios from 'axios';
 import Pagination from '../components/Pagination';
 import OrderCard from '../components/OrderCard';
 import OrderFilters from '../components/OrderFilters';
+import SearchBar from '../components/SearchBar';
 
 const PAGE_SIZE = 10;
 
@@ -12,7 +13,6 @@ const MyOrder = () => {
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
   const [filters, setFilters] = useState({});
-  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -44,15 +44,21 @@ const MyOrder = () => {
     fetchOrders();
   }, [page, filters]);
 
-  const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
+  const handleSearch = (email) => {
+    setFilters((prev) => ({ ...prev, email }));
+    setPage(1);
+  };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
       <OrderFilters filters={filters} setFilters={setFilters} />
-      {orders.length === 0 ? (
+
+      {loading ? (
+        <div className="text-gray-500">Loading orders...</div>
+      ) : orders.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (
         <>
@@ -61,7 +67,6 @@ const MyOrder = () => {
               <OrderCard key={order._id} order={order} />
             ))}
           </div>
-          {/* Pagination Controls */}
           <Pagination page={page} totalPages={totalPages} setPage={setPage} />
         </>
       )}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const OrderFilters = ({ filters, setFilters }) => {
   const [customRange, setCustomRange] = useState({ from: '', to: '' });
-  const [showFilters, setShowFilters] = useState(false); // toggle state
+  const [showFilters, setShowFilters] = useState(false);
 
   const handleDateRange = (range) => {
     let from = '', to = '';
@@ -101,18 +101,6 @@ const OrderFilters = ({ filters, setFilters }) => {
               </button>
             </div>
           )}
-
-          {/* Email Filter */}
-          <div>
-            <label className="block font-medium mb-1">Email</label>
-            <input
-              type="email"
-              placeholder="Search by email"
-              value={filters.email || ''}
-              onChange={e => setFilters((prev) => ({ ...prev, email: e.target.value }))}
-              className="border rounded p-2"
-            />
-          </div>
 
           {/* Order Total Filter */}
           <div>

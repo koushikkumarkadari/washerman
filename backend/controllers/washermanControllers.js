@@ -112,3 +112,17 @@ export const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: 'Failed to update order status' });
   }
 };
+
+export const updatePaymentStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { paymentStatus } = req.body;
+    const order = await Order.findOne({ _id: orderId, washerman: req.user._id });
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    order.paymentStatus = paymentStatus;
+    await order.save();
+    res.json({ message: 'Payment status updated', order });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update payment status' });
+  }
+};

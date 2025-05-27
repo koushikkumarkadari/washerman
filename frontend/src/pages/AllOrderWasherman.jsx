@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Pagination from '../components/Pagination';
 import OrderCard from '../components/OrderCard';
 import OrderFilters from '../components/OrderFilters';
+import SearchBar from '../components/SearchBar';
 
 const PAGE_SIZE = 10;
 
@@ -14,6 +15,7 @@ const AllOrderWasherman = () => {
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
   const [filters, setFilters] = useState({});
+  const [searchEmail, setSearchEmail] = useState('');
 
   useEffect(() => {
     const fetchWashermanOrders = async () => {
@@ -69,15 +71,22 @@ const AllOrderWasherman = () => {
     }
   };
 
-  const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
+  const handleSearch = (email) => {
+    setFilters((prev) => ({ ...prev, email }));
+    setPage(1);
+  };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Orders Assigned to You</h1>
+      <SearchBar onSearch={handleSearch} initialEmail={filters.email || ''} />
       <OrderFilters filters={filters} setFilters={setFilters} />
-      {orders.length === 0 ? (
+
+      {loading ? (
+        <div className="text-gray-500">Loading orders...</div>
+      ) : orders.length === 0 ? (
         <p className="text-gray-500">No orders found.</p>
       ) : (
         <>
@@ -91,7 +100,6 @@ const AllOrderWasherman = () => {
               />
             ))}
           </div>
-          {/* Pagination Controls */}
           <Pagination page={page} totalPages={totalPages} setPage={setPage} />
         </>
       )}

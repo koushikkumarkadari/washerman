@@ -51,27 +51,27 @@ const AllOrderAdmin = () => {
 
   const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
 
-  if (loading) return <div className="p-8">Loading...</div>;
-
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">All Orders (Admin)</h1>
-      <OrderFilters  filters={filters} setFilters={setFilters} />
-      {orders.length === 0 ? (
-        <p className="text-gray-500">No orders found.</p>
-      ) : (
-        <>
-          <div className="space-y-6">
-            {orders.map((order) => (
-              <OrderCard key={order._id} order={order} />
-            ))}
-          </div>
-          {/* Pagination Controls */}
-          <Pagination page={page} totalPages={totalPages} setPage={setPage} />
-        </>
-      )}
-    </div>
-  );
+  <div className="p-8 max-w-5xl mx-auto">
+    <h1 className="text-2xl font-bold mb-6">All Orders (Admin)</h1>
+    <OrderFilters filters={filters} setFilters={setFilters} />
+    
+    {loading ? (
+      <div className="text-gray-500">Loading orders...</div>
+    ) : orders.length === 0 ? (
+      <p className="text-gray-500">No orders found.</p>
+    ) : (
+      <>
+        <div className="space-y-6">
+          {orders.map((order) => (
+            <OrderCard key={order._id} order={order} />
+          ))}
+        </div>
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+      </>
+    )}
+  </div>
+);
 };
 
 export default AllOrderAdmin;

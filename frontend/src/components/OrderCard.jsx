@@ -1,6 +1,12 @@
 import React from 'react';
 
-const OrderCard = ({ order, showStatusDropdown, onStatusChange }) => (
+const OrderCard = ({
+  order,
+  showStatusDropdown,
+  onStatusChange,
+  showPaymentDropdown,
+  onPaymentStatusChange,
+}) => (
   <div className="bg-white shadow rounded p-4">
     <div className="flex justify-between mb-2">
       <span className="font-semibold">Order ID: {order._id}</span>
@@ -23,10 +29,24 @@ const OrderCard = ({ order, showStatusDropdown, onStatusChange }) => (
         <span className="font-medium">Status:</span> {order.status}
       </div>
     )}
-    {order.paymentStatus && (
-      <div className="mb-2">
-        <span className="font-medium">Payment Status:</span> {order.paymentStatus}
+    {showPaymentDropdown ? (
+      <div className="mb-2 flex items-center">
+        <span className="font-medium mr-2">Payment Status:</span>
+        <select
+          value={order.paymentStatus}
+          onChange={e => onPaymentStatusChange(order._id, e.target.value)}
+          className="border rounded px-2 py-1"
+        >
+          <option value="unpaid">Unpaid</option>
+          <option value="paid">Paid</option>
+        </select>
       </div>
+    ) : (
+      order.paymentStatus && (
+        <div className="mb-2">
+          <span className="font-medium">Payment Status:</span> {order.paymentStatus}
+        </div>
+      )
     )}
     {order.user && (
       <div className="mb-2">

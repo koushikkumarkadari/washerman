@@ -16,7 +16,9 @@ const OrderForm = () => {
   const [ironing, setIroning] = useState(false);
   const [pricing, setPricing] = useState({});
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingOnline, setLoadingOnline] = useState(false);
+  const [loadingOffline, setLoadingOffline] = useState(false);
+
 
   // Fetch pricing for this washerman
   useEffect(() => {
@@ -84,7 +86,7 @@ const OrderForm = () => {
 
   // Online payment flow
   const handleSubmitOnline = async () => {
-    setLoading(true);
+    setLoadingOnline(true);
     try {
       const token = localStorage.getItem('token');
       // 1. Place order first
@@ -151,14 +153,14 @@ const OrderForm = () => {
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to place order or payment');
     } finally {
-      setLoading(false);
+      setLoadingOnline(false);
       setShowPaymentModal(false);
     }
   };
 
   // COD flow
   const handleSubmitCod = async () => {
-    setLoading(true);
+    setLoadingOffline(true);
     try {
       const token = localStorage.getItem('token');
       await axios.post(
@@ -175,7 +177,7 @@ const OrderForm = () => {
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to place order');
     } finally {
-      setLoading(false);
+      setLoadingOffline(false);
       setShowPaymentModal(false);
     }
   };
@@ -206,8 +208,13 @@ const OrderForm = () => {
             <input
               type="number"
               min={1}
+              max={30}
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={e => {
+                // Prevent entering more than 30
+                const val = Math.max(1, Math.min(30, Number(e.target.value)));
+                setQuantity(val);
+              }}
               placeholder="Quantity"
               className="border p-2 rounded"
             />

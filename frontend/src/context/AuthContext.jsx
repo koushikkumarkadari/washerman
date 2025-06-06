@@ -1,14 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from '../api/axios';
+import { jwtDecode } from "jwt-decode"
 
-// Helper to decode JWT (without validation, for role extraction)
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return {};
-  }
-}
 
 const AuthContext = createContext();
 
@@ -54,6 +47,33 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, user]);
 
+  useEffect(() => {
+    if (token) {
+      let decoded;
+      try {
+        decoded = jwtDecode(token);
+      } catch {
+        logout();
+        return;
+      }
+      const exp = decoded.exp ? decoded.exp * 1000 : 0;
+      if (exp && Date.now() > exp) {
+        logout();
+        return;
+      }
+      // Set timer to auto-logout at expiry
+      const timeout = exp - Date.now();
+      if (timeout > 0) {
+        const timer = setTimeout(() => {
+          logout();
+          alert('Session expired. Please log in again.');
+          window.location.href = '/login';
+        }, timeout);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [token]);
+
   const isAdmin = role === 'admin';
   const isWasherman = role === 'washerman';
   const isUser = role === 'user';
@@ -76,3 +96,12 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+// Helper to decode JWT (without validation, for role extraction)
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return {};
+  }
+}

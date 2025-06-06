@@ -126,3 +126,89 @@ export const updatePaymentStatus = async (req, res) => {
     res.status(500).json({ message: 'Failed to update payment status' });
   }
 };
+
+export const bulkUpdateOrderStatus = async (req, res) => {
+  try {
+    const { status, filters } = req.body;
+    // Only allow these two statuses
+    if (!['pending', 'completed'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    // 1. Build the “pre‐update” query based on filters + washerman
+    const baseQuery = { washerman: req.user._id };
+
+    // Date filters
+    if (filters?.dateFrom || filters?.dateTo) {
+      baseQuery.createdAt = {};
+      if (filters.dateFrom)  baseQuery.createdAt.$gte = new Date(filters.dateFrom);
+      if (filters.dateTo)    baseQuery.createdAt.$lte = new Date(filters.dateTo + 'T23:59:59.999Z');
+    }
+
+    // Total amount filters
+    if (filters?.totalMin) {
+      baseQuery.total = { ...baseQuery.total, $gte: Number(filters.totalMin) };
+    }
+    if (filters?.totalMax) {
+      baseQuery.total = { ...baseQuery.total, $lte: Number(filters.totalMax) };
+    }
+
+    // Email (user) filter: if an email substring is provided, find that user first
+    if (filters?.email) {
+      const user = await User.findOne({ email: { $regex: filters.email, $options: 'i' } });
+      // If no user matches, we can set user=null so that no orders match (hence no updates/no emails)
+      baseQuery.user = user ? user._id : null;
+    }
+
+    // 2. Only pick those orders whose current status is NOT already the target status
+    baseQuery.status = { $ne: status };
+
+    // 3. Fetch these orders (they all have status != newStatus)
+    const ordersToUpdate = await Order.find(baseQuery);
+
+    // If nothing to update, short‐circuit:
+    if (ordersToUpdate.length === 0) {
+      return res.json({ message: `No orders needed updating to "${status}".` });
+    }
+
+    // 4. Perform the bulk update
+    const result = await Order.updateMany(
+      // same query we just used to fetch
+      baseQuery,
+      // set status to the new value
+      { status }
+    );
+
+    // 5. Send emails for each order in ordersToUpdate
+    //    We know each one’s old status was ≠ new status, so it changed
+    await Promise.all(
+      ordersToUpdate.map(async (order) => {
+        try {
+          const userOfOrder = await User.findById(order.user);
+          const washerman   = await User.findById(req.user._id);
+          if (userOfOrder && washerman) {
+            // Pass “status” (the new status) into your helper
+            await sendStatusEmail(
+              userOfOrder.email,
+              order,           // contains the old order data (you can still read order._id, etc.)
+              userOfOrder,
+              washerman,
+              status           // this is the new status
+            );
+          }
+        } catch (e) {
+          console.error(`Failed to send email for order ${order._id}:`, e);
+        }
+      })
+    );
+
+    // 6. Finally, return how many documents were modified
+    const updatedCount = result.nModified ?? result.modifiedCount ?? 0;
+    res.json({ message: `Updated ${updatedCount} orders to "${status}".` });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Bulk update failed' });
+  }
+};
+

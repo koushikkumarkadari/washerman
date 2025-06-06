@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const OrderFilters = ({ filters, setFilters }) => {
+const OrderFilters = ({ filters, setFilters, onBulkStatusChange }) => {
   const [customRange, setCustomRange] = useState({ from: '', to: '' });
   const [showFilters, setShowFilters] = useState(false);
 
@@ -135,6 +135,27 @@ const OrderFilters = ({ filters, setFilters }) => {
               <option value="totalLowHigh">Total Price (Low to High)</option>
               <option value="totalHighLow">Total Price (High to Low)</option>
             </select>
+          </div>
+
+          {/* Bulk Status Update */}
+          <div>
+            <label className="block font-medium mb-1">Bulk Status Update</label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="bg-green-600 text-white px-3 py-1 rounded"
+                onClick={() => onBulkStatusChange && onBulkStatusChange('completed')}
+              >
+                Mark All as Completed
+              </button>
+              <button
+                type="button"
+                className="bg-yellow-500 text-white px-3 py-1 rounded"
+                onClick={() => onBulkStatusChange && onBulkStatusChange('pending')}
+              >
+                Mark All as Pending
+              </button>
+            </div>
           </div>
 
           {/* Reset */}

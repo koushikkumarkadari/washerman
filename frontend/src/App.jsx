@@ -21,7 +21,7 @@ function App() {
   const { role,user } = useAuth(); // Get role from context
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-100">
       <Navbar user={user} role={role} />
       <Routes>
         {/* Public Routes */}
@@ -102,7 +102,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
 

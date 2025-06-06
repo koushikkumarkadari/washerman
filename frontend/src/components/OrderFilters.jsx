@@ -37,7 +37,7 @@ const OrderFilters = ({ filters, setFilters, onBulkStatusChange }) => {
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 w-full">
       {/* Toggle Button */}
       <div
         className="flex items-center gap-2 cursor-pointer w-fit"

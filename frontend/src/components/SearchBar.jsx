@@ -14,7 +14,8 @@ const SearchBar = ({ onSearch, initialEmail = '' }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="mb-4 flex flex-col md:flex-row items-center gap-2">
+      <div>
       <input
         type="email"
         placeholder="Search by user email"
@@ -22,6 +23,8 @@ const SearchBar = ({ onSearch, initialEmail = '' }) => {
         onChange={e => setEmail(e.target.value)}
         className="border rounded p-2 w-64"
       />
+      </div>
+      <div>
       <button
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -35,6 +38,7 @@ const SearchBar = ({ onSearch, initialEmail = '' }) => {
       >
         Reset
       </button>
+      </div>
     </form>
   );
 };

@@ -25,7 +25,7 @@ export const getApprovedWasherman = async (req, res) => {
 export const createOrder = async (req, res) => {
   try {
     const washermanId = req.params.id;
-    const { items, total } = req.body;
+    const { items, total,paymentStatus } = req.body;
     const userId = req.user._id;
 
     // Optional: Validate washerman exists and is a washerman
@@ -37,6 +37,7 @@ export const createOrder = async (req, res) => {
     const order = new Order({
       user: userId,
       washerman: washermanId,
+      paymentStatus : paymentStatus , // Default to unpaid if not provided
       items,
       total
     });

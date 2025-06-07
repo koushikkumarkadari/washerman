@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const OrderFilters = ({ filters, setFilters, onBulkStatusChange }) => {
   const [customRange, setCustomRange] = useState({ from: '', to: '' });
   const [showFilters, setShowFilters] = useState(false);
+  const { role } = useAuth();
 
   const handleDateRange = (range) => {
     let from = '', to = '';
@@ -138,7 +140,7 @@ const OrderFilters = ({ filters, setFilters, onBulkStatusChange }) => {
           </div>
 
           {/* Bulk Status Update */}
-          <div>
+          {role==="washerman"&&<div>
             <label className="block font-medium mb-1">Bulk Status Update</label>
             <div className="flex gap-2">
               <button
@@ -156,9 +158,9 @@ const OrderFilters = ({ filters, setFilters, onBulkStatusChange }) => {
                 Mark All as Pending
               </button>
             </div>
-          </div>
+          </div>}
 
-          {/* Reset */}
+          
           <button
             type="button"
             className="ml-auto bg-gray-200 px-3 py-1 rounded"

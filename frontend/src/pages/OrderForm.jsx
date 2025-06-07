@@ -288,21 +288,21 @@ const OrderForm = () => {
             <button
               className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 mb-3"
               onClick={handleSubmitOnline}
-              disabled={loading}
+              disabled={loadingOnline}
             >
-              {loading ? 'Processing...' : 'Online Payment'}
+              {loadingOnline ? 'Processing...' : 'Online Payment'}
             </button>
             <button
               className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700"
               onClick={handleSubmitCod}
-              disabled={loading}
+              disabled={loadingOffline}
             >
-              {loading ? 'Processing...' : 'Cash on Delivery'}
+              {loadingOffline ? 'Processing...' : 'Cash on Delivery'}
             </button>
             <button
               className="mt-4 text-blue-600 hover:underline"
               onClick={() => setShowPaymentModal(false)}
-              disabled={loading}
+              disabled={loadingOnline}
             >
               Cancel
             </button>

@@ -42,7 +42,7 @@ const Navbar = ({ role, user }) => {
 
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center relative w-full">
-      <div className="flex items-center">
+      <div className="flex items-center" onClick={() => navigate('/')}>
         <img
           src="https://i.ibb.co/prQKksYh/assets-task-01jw0trjw3e8cbz9w61v81yb5e-1748079800-img-1.jpg"
           alt="Washerman Logo"
